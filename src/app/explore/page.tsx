@@ -1,88 +1,116 @@
 'use client'
 
-import { useState } from 'react'
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { fetchGigs, fetchCourses } from '@/utils/api'
+import { toast } from 'react-hot-toast'
 
-export default function ExplorePage() {
+export default function Explore() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [gigs, setGigs] = useState([])
+  const [courses, setCourses] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
+  const router = useRouter()
 
-  const gigs = [
-    { id: 1, title: 'Logo Design', company: 'DesignCo', price: '$100' },
-    { id: 2, title: 'Web Development', company: 'TechInc', price: '$500' },
-    { id: 3, title: 'Content Writing', company: 'WritersUnited', price: '$50' },
-  ]
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    } else {
+      router.push('/auth/signin')
+    }
+  }, [router])
 
-  const courses = [
-    { id: 1, title: 'Introduction to UI/UX', instructor: 'Jane Doe', price: '$199' },
-    { id: 2, title: 'Advanced JavaScript', instructor: 'John Smith', price: '$299' },
-    { id: 3, title: 'Digital Marketing Essentials', instructor: 'Emily Brown', price: '$149' },
-  ]
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const [gigsData, coursesData] = await Promise.all([
+          fetchGigs(searchTerm),
+          fetchCourses(searchTerm)
+        ])
+        setGigs(gigsData)
+        setCourses(coursesData)
+      } catch (error) {
+        console.error('Fetch data error:', error)
+        toast.error('Failed to fetch data. Please try again.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-  const filteredGigs = gigs.filter(gig => 
-    gig.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    gig.company.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+    fetchData()
+  }, [searchTerm])
 
-  const filteredCourses = courses.filter(course => 
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    router.push('/auth/signin')
+  }
+
+  if (!user) {
+    return <div>Loading...</div>
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-8">Explore Opportunities</h1>
-      
-      <div className="mb-6">
-        <Input
-          type="text"
-          placeholder="Search gigs or courses..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full"
-        />
-      </div>
-
-      <Tabs defaultValue="gigs">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="gigs">Gigs</TabsTrigger>
-          <TabsTrigger value="courses">Courses</TabsTrigger>
-        </TabsList>
-        <TabsContent value="gigs">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredGigs.map(gig => (
-              <Card key={gig.id}>
-                <CardHeader>
-                  <CardTitle>{gig.title}</CardTitle>
-                  <CardDescription>{gig.company}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-bold">{gig.price}</p>
-                  <Button className="mt-4">Apply</Button>
-                </CardContent>
-              </Card>
-            ))}
+    <div className="min-h-screen bg-gray-100">
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-900">Explore</h1>
+          <nav className="flex items-center space-x-4">
+            <Link href="/dashboard">
+              <Button variant="ghost">Dashboard</Button>
+            </Link>
+            <Avatar>
+              <AvatarImage src={user.avatar || "https://github.com/shadcn.png"} alt={user.name} />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <Button variant="ghost" onClick={handleLogout}>Logout</Button>
+          </nav>
+        </div>
+      </header>
+      <main>
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 sm:px-0">
+            <div className="mb-6">
+              <Input
+                type="text"
+                placeholder="Search for gigs or courses..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="input"
+              />
+            </div>
+            {isLoading ? (
+              <div>Loading...</div>
+            ) : (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {[...gigs, ...courses].map((item: any) => (
+                  <Card key={item.id} className="card animate-slide-in">
+                    <CardHeader>
+                      <CardTitle>{item.title}</CardTitle>
+                      <CardDescription>{item.type === 'gig' ? 'Gig' : 'Course'}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p>{item.description}</p>
+                    </CardContent>
+                    <CardFooter className="flex justify-between">
+                      <span className="font-bold">${item.price}</span>
+                      <Button className="btn-secondary">View Details</Button>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
-        </TabsContent>
-        <TabsContent value="courses">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredCourses.map(course => (
-              <Card key={course.id}>
-                <CardHeader>
-                  <CardTitle>{course.title}</CardTitle>
-                  <CardDescription>{course.instructor}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-bold">{course.price}</p>
-                  <Button className="mt-4">Enroll</Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+        </div>
+      </main>
     </div>
   )
 }
