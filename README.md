@@ -5,7 +5,7 @@ To learn more about Next.js, take a look at the following resources:
 
 # GrowMore - Share Your Skills, Empower Others
 
-Welcome to **GrowMore**, a platform designed to help you share your unique skills with the world and earn money by teaching others. Whether you're a coding wizard, an artist, or someone with expertise in a specific field, **GrowMore** is here to help you turn your knowledge into income. This project showcases the landing page of **GrowMore** – a simple, clean, and engaging space for users to learn more about how they can get involved.
+Welcome to **GrowMore**, a platform designed to help you share your unique skills with the world and earn money by teaching others or even find the venues and people for your niche. Whether you're a coding wizard, an artist, or someone with expertise in a specific field, **GrowMore** is here to help you turn your knowledge into income. This project showcases the landing page of **GrowMore** – a simple, clean, and engaging space for users to learn more about how they can get involved.
 
 ## What GrowMore Offers
 
