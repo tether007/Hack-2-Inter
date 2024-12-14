@@ -52,25 +52,20 @@ Open the index.html file in your browser to view the landing page:
     start index.html  # Windows
     xdg-open index.html 
 
-File Structure
-graphql
-Copy code
-    GrowMore/
-    │
-    ├── index.html        # Main HTML structure of the landing page
-    ├── styles.css        # CSS for styling and layout
-    ├── script.js         # JavaScript for additional functionality
-    ├── README.md         # Project documentation
-    └── assets/            # Folder for images or assets (if any)
-Customization
+
 Want to make GrowMore your own? You can:
 
 Edit text content: Change the descriptions, headlines, and testimonials to match your voice.
+
 Style it your way: Modify colors, fonts, and layout in styles.css to match your personal style.
+
 Add features: Use script.js to include animations, forms, or other interactivity.
 Technologies Used
+
 HTML: For the structure and layout of the page.
+
 CSS: For styling and making sure the page looks great on all devices.
+
 JavaScript: For adding optional interactive features.
 
 
