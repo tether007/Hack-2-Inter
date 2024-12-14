@@ -31,6 +31,10 @@ Ready to see the magic of **GrowMore** in action? It’s easy to get started:
 
 1. **Clone the repository** to your local machine:
 
+
+https://github.com/user-attachments/assets/27fba0ab-12c8-4856-88fb-09ddd3db173d
+
+
    ```bash
    git clone https://github.com/your-username/GrowMore.git
 
@@ -61,6 +65,8 @@ Style it your way: Modify colors, fonts, and layout in styles.css to match your 
 
 Add features: Use script.js to include animations, forms, or other interactivity.
 Technologies Used
+
+
 
 HTML: For the structure and layout of the page.
 
