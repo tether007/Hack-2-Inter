@@ -38,7 +38,7 @@ export function CreateListing() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <Label htmlFor="title">Title</Label>
         <Input
@@ -46,6 +46,7 @@ export function CreateListing() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
+          className="mt-1"
         />
       </div>
       <div>
@@ -55,6 +56,7 @@ export function CreateListing() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
+          className="mt-1"
         />
       </div>
       <div>
@@ -65,11 +67,12 @@ export function CreateListing() {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           required
+          className="mt-1"
         />
       </div>
       <div>
         <Label>Type</Label>
-        <RadioGroup value={type} onValueChange={setType}>
+        <RadioGroup value={type} onValueChange={setType} className="mt-1">
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="gig" id="gig" />
             <Label htmlFor="gig">Gig</Label>
@@ -80,7 +83,7 @@ export function CreateListing() {
           </div>
         </RadioGroup>
       </div>
-      <Button type="submit" disabled={isLoading}>
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Creating...' : `Create ${type}`}
       </Button>
     </form>
